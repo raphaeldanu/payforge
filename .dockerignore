@@ -1,0 +1,13 @@
+.git
+.github
+.env
+**/.env
+**/vendor
+**/node_modules
+**/dist
+**/storage/logs
+**/.phpunit.cache
+**/coverage
+.idea
+.vscode
+.DS_Store

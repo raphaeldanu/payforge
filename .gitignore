@@ -1,0 +1,29 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Laravel
+apps/api/.env
+apps/api/vendor/
+apps/api/node_modules/
+apps/api/storage/*.key
+
+# Node
+apps/provider-service/node_modules/
+apps/provider-service/dist/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing
+.phpunit.cache/
+coverage/
