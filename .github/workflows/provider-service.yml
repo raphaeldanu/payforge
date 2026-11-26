@@ -1,0 +1,53 @@
+
+name: Provider Service CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/provider-service/**'
+      - '.github/workflows/provider-service.yml'
+
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/provider-service/**'
+      - '.github/workflows/provider-service.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: apps/provider-service
+
+jobs:
+  provider-tests:
+    name: Node.js Tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/provider-service/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type checking
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build application
+        run: npm run build
