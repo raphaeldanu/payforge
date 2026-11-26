@@ -1,6 +1,52 @@
 <laravel-boost-guidelines>
 === foundation rules ===
 
+# Laravel API — Agent Instructions
+
+These instructions apply to `apps/api` and supplement the repository-root `AGENTS.md`.
+
+## Framework conventions
+- Follow the Laravel version and PHP version actually configured by this app. Inspect `composer.json`, `composer.lock`, and existing code before using framework APIs.
+- Use Laravel conventions for routes, middleware, Form Requests, API Resources, policies, Eloquent models, migrations, queues, and tests.
+- Keep business rules out of controllers. Controllers should coordinate validated input and application actions/services, then return API Resources.
+- Organize domain logic consistently with the existing project. The intended domain boundaries are Currency, Merchant, ApiKey, Provider, Transaction, Wallet, Ledger, Commission, RollingReserve, and Reconciliation. Do not create all these modules prematurely.
+- Prefer constructor injection and explicit dependencies. Avoid service-locator patterns and static global state for business logic.
+- Use PHP enums for finite domain states where appropriate.
+
+## Persistence and financial logic
+- Use integer minor units for amounts and explicit currency relationships/exponents.
+- Use `DB::transaction()` for multi-row financial changes.
+- Use `lockForUpdate()` inside a transaction when concurrent updates could cause lost updates or overspending.
+- Enforce idempotency with a unique database constraint and handle unique-constraint races safely.
+- Use decimal-safe or integer-safe operations only. Never cast monetary values to float.
+- Keep ledger posting in a dedicated domain service/action. Validate balanced debit/credit totals before posting.
+- Do not update or delete posted journal entries. Use reversal/adjustment entries.
+- Do not use Eloquent model events as the only enforcement mechanism for critical financial invariants.
+
+## HTTP/API implementation
+- Use Form Requests for validation and Policies/Gates for authorization.
+- Enforce merchant/tenant scoping in the query itself, not only by hiding UI links or checking after retrieval.
+- Use API Resources to control response shape and prevent accidental field leakage.
+- Protect internal service endpoints with explicit service authentication and authorization.
+- Keep API routes versioned under the existing `/api/v1` convention if present.
+- Avoid returning raw exception messages or provider response bodies to clients.
+
+## Queues and events
+- Make queued jobs safe to retry. Define retry/backoff/timeout behavior intentionally.
+- Do not dispatch a job before the database transaction commits when it depends on committed rows; use after-commit dispatch or the transactional outbox pattern as appropriate.
+- Assume jobs can execute more than once.
+- Keep external side effects outside long-running database transactions.
+
+## Tests and quality
+- Use the test framework and conventions already configured (normally PHPUnit or Pest; inspect before choosing).
+- Use factories and deterministic fakes. Never call real payment providers from tests.
+- Include tests for policies, tenant isolation, idempotency, state transitions, exact money values, and ledger balancing.
+- Run Pint if configured, then relevant tests, then the full suite where practical.
+- Add migrations and seeders only for synthetic demo data. Seeders must be safe to run repeatedly where practical.
+
+## Before finishing
+Check migration status, test output, formatting, route behavior, and whether `.env.example` or docs need updates. Report commands actually executed.
+
 # Laravel Boost Guidelines
 
 ## Foundational Context
