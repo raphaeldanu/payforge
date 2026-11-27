@@ -7,13 +7,13 @@ These instructions apply to `apps/provider-service` and supplement the repositor
 - Laravel remains the system of record for merchants, payment transactions, wallet balances, ledger entries, commissions, and reserves.
 - Do not connect this service directly to Laravel's business database or write Laravel-owned tables.
 - Communicate with Laravel through a documented, authenticated internal API or event contract.
-- Keep provider-specific payloads behind adapter interfaces. Do not leak provider-specific response formats into the core domain contract.
+- Keep provider-specific payloads behind adapter interfaces. Do not leak provider-specific response formats into the internal contract.
 
 ## TypeScript conventions
 - Follow the TypeScript configuration, Node version, module system, package manager, and scripts already in the repository.
 - Keep strict type checking enabled. Avoid `any`; if unavoidable at an untrusted boundary, narrow and validate immediately.
 - Parse and validate environment variables at startup. Do not scatter direct `process.env` access throughout business logic.
-- Separate transport, provider adapters, domain mapping, and application orchestration.
+- Separate transport, provider adapters, data mapping/normalization, and application orchestration. Use standard layered service structure, not Domain-Driven Design.
 - Use dependency injection or explicit function parameters for HTTP clients, clocks, loggers, and configuration so tests remain deterministic.
 - Keep handlers small. Validate request shape before business processing.
 
