@@ -9,9 +9,9 @@ These instructions apply to `apps/api` and supplement the repository-root `AGENT
 - Follow the Laravel version and PHP version actually configured by this app. Inspect `composer.json`, `composer.lock`, and existing code before using framework APIs.
 - Use Laravel conventions for routes, middleware, Form Requests, API Resources, policies, Eloquent models, migrations, queues, and tests.
 - Keep business rules out of controllers. Controllers should coordinate validated input and application actions/services, then return API Resources.
-- Organize domain logic consistently with the existing project. The intended domain boundaries are Currency, Merchant, ApiKey, Provider, Transaction, Wallet, Ledger, Commission, RollingReserve, and Reconciliation. Do not create all these modules prematurely.
+- Organize business logic using standard Laravel structure rather than Domain-Driven Design. Keep controllers, form requests, API resources, models, policies, jobs, and services/actions in their conventional locations; do not introduce `app/Domain` or module/bounded-context layers. The main concepts are Currency, Merchant, ApiKey, Provider, Transaction, Wallet, Ledger, Commission, RollingReserve, and Reconciliation. Do not create all these modules prematurely.
 - Prefer constructor injection and explicit dependencies. Avoid service-locator patterns and static global state for business logic.
-- Use PHP enums for finite domain states where appropriate.
+- Use PHP enums for finite states where appropriate.
 
 ## Persistence and financial logic
 - Use integer minor units for amounts and explicit currency relationships/exponents.
@@ -19,7 +19,7 @@ These instructions apply to `apps/api` and supplement the repository-root `AGENT
 - Use `lockForUpdate()` inside a transaction when concurrent updates could cause lost updates or overspending.
 - Enforce idempotency with a unique database constraint and handle unique-constraint races safely.
 - Use decimal-safe or integer-safe operations only. Never cast monetary values to float.
-- Keep ledger posting in a dedicated domain service/action. Validate balanced debit/credit totals before posting.
+- Keep ledger posting in a dedicated service or action class. Validate balanced debit/credit totals before posting.
 - Do not update or delete posted journal entries. Use reversal/adjustment entries.
 - Do not use Eloquent model events as the only enforcement mechanism for critical financial invariants.
 

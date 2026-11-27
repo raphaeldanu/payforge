@@ -14,12 +14,15 @@ This is a demonstration project. Do not imply that it is PCI DSS certified, prod
 
 Preserve this separation. The provider service must not independently update Laravel-owned transaction, wallet, or ledger tables. It communicates outcomes to the Laravel API through an authenticated internal interface or documented event contract.
 
+### Architecture style
+Use standard Laravel application structure, not Domain-Driven Design. Keep code in the framework's conventional folders (controllers, form requests, API resources, models, policies, jobs, and services/actions when warranted). Do not introduce DDD layering such as `app/Domain`, bounded contexts, aggregates, domain events, or repository abstractions unless a task explicitly requires them.
+
 ## Working rules
 1. Read this file and the nearest nested `AGENTS.md` before editing. More specific instructions supplement this file; if instructions conflict, follow the more specific file unless it violates a security or financial invariant here.
 2. Inspect the existing code, migrations, tests, Composer/npm scripts, Docker setup, and docs before proposing changes. Do not assume a planned file or feature already exists.
 3. Make focused, incremental changes. Avoid unrelated refactors, dependency upgrades, renaming, or formatting churn.
 4. Before coding, summarize the intended approach and list affected files when the task is broad or changes multiple modules.
-5. Implement one vertical slice at a time: schema, domain logic, HTTP/worker integration, tests, and documentation.
+5. Implement one vertical slice at a time: schema, business logic, HTTP/worker integration, tests, and documentation.
 6. Follow existing naming, namespaces, formatting, error conventions, and API response patterns.
 7. Do not introduce a new package when the existing framework or codebase can reasonably solve the problem.
 8. Do not leave TODO-only implementations, fake success responses, disabled tests, or silently swallowed exceptions.
